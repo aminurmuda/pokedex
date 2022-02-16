@@ -1,14 +1,5 @@
 import { useEffect, useState } from "react";
-// import POKEMON_LIST from "./query/pokmon-list.gql"
-import axios from "axios";
-import React from "react";
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  useQuery,
-  gql,
-} from "@apollo/client";
+import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 
 export default function usePokemonList(pageNumber = 1) {
   const client = new ApolloClient({
@@ -61,7 +52,7 @@ export default function usePokemonList(pageNumber = 1) {
                   id: b.id,
                   name: b.name,
                   types: b.pokemons[0].types.map((type) => {
-                    return type.type.name
+                    return type.type.name;
                   }),
                 };
               }),
@@ -70,13 +61,12 @@ export default function usePokemonList(pageNumber = 1) {
         });
         setHasMore(res.data.species.length > 0);
         setLoading(false);
-        console.log(res.data);
       })
       .catch(() => {
         setError(true);
         setLoading(false);
       });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber]);
 
   return { loading, error, pokemons, hasMore };

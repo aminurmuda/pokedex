@@ -19,7 +19,6 @@ export default function PokemonList() {
         }
       });
       if (node) observer.current.observe(node);
-      console.log("visible", node);
     },
     [loading, hasMore]
   );
@@ -29,7 +28,10 @@ export default function PokemonList() {
       <div className="columns is-mobile is-multiline">
         {pokemons.map((pokemon, index) => {
           return (
-            <div className="column is-half-mobile is-half-desktop">
+            <div
+              key={pokemon.id}
+              className="column is-half-mobile is-half-desktop"
+            >
               {pokemons.length === index + 1 ? (
                 <Link
                   ref={lastPokemonElementRef}

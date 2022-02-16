@@ -18,7 +18,13 @@ export default function Card({ data }) {
       <p className="has-text-weight-semibold capital mb-2">{data.name}</p>
       {data.types.map((type) => {
         return (
-          <span className={"type-tag has-text-weight-semibold is-size-7-mobile is-size-6-desktop is-" + type} key={data.id + "-" + type}>
+          <span
+            className={
+              "type-tag has-text-weight-semibold is-size-7-mobile is-size-6-desktop is-" +
+              type
+            }
+            key={data.id + "-" + type}
+          >
             {type}
           </span>
         );

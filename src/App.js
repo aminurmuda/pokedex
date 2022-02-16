@@ -8,10 +8,8 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<PokemonList />}>
-        </Route>
-        <Route exact path="/detail/:id" element={<PokemonDetail />}>
-        </Route>
+        <Route exact path="/" element={<PokemonList />}></Route>
+        <Route exact path="/detail/:id" element={<PokemonDetail />}></Route>
       </Routes>
     </Router>
   );

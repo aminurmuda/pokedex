@@ -14,7 +14,7 @@ body {
 .between {
   display: flex;
   justify-content: space-between;
-  align-items: end;
+  align-items: flex-end;
 }
 
 p {

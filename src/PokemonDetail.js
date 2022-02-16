@@ -7,124 +7,123 @@ import styled from "styled-components";
 import Tabs from "./Tabs";
 import { Link } from "react-router-dom";
 import Icon from "@mdi/react";
-import { mdiLink } from "@mdi/js";
+import { mdiLink, mdiGenderMale, mdiGenderFemale } from "@mdi/js";
+
+const Bar = styled.hr`
+  /* Adapt the colors based on primary prop */
+  width: ${(props) => props.length * 2.5 + "px"};
+  max-width: 100%;
+  border-top: 6px solid #3182ce;
+  margin: 0;
+`;
 
 export default function PokemonDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [pokemon, setPokemon] = useState(null);
   const { id } = useParams();
   const [error, setError] = useState(false);
-  const client = new ApolloClient({
-    uri: "https://beta.pokeapi.co/graphql/v1beta",
-    cache: new InMemoryCache(),
-  });
-
-  const Bar = styled.hr`
-    /* Adapt the colors based on primary prop */
-    width: ${(props) => props.length * 2.5 + "px"};
-    max-width: 100%;
-    border-top: 6px solid #3182ce;
-    margin: 0;
-  `;
 
   useEffect(() => {
+    function fetchPokemonDetail() {
+      const client = new ApolloClient({
+        uri: "https://beta.pokeapi.co/graphql/v1beta",
+        cache: new InMemoryCache(),
+      });
+      client
+        .query({
+          query: gql`
+              query getPokemon {
+                species: pokemon_v2_pokemonspecies(
+                  where: { name: { _eq: "${id}" } }
+                  limit: 1
+                ) {
+                  id
+                  gender_rate
+                  hatch_counter
+                  name
+                  description: pokemon_v2_pokemonspeciesflavortexts(
+                    limit: 1
+                    where: { pokemon_v2_language: { name: { _eq: "en" } } }
+                  ) {
+                    flavor_text
+                  }
+                  evolutions: pokemon_v2_evolutionchain {
+                    species: pokemon_v2_pokemonspecies(order_by: { order: asc }) {
+                      id
+                      name
+                      evolves_from_species_id
+                      evolutions: pokemon_v2_pokemonevolutions {
+                        min_level
+                        min_affection
+                        min_beauty
+                        min_happiness
+                        gender_id
+                        time_of_day
+                        move: pokemon_v2_move {
+                          name
+                        }
+                        by_held_item: pokemonV2ItemByHeldItemId {
+                          name
+                        }
+                        item: pokemon_v2_item {
+                          name
+                        }
+                        evolution_trigger: pokemon_v2_evolutiontrigger {
+                          name
+                        }
+                        location: pokemon_v2_location {
+                          name
+                        }
+                      }
+                    }
+                  }
+                  egg_groups: pokemon_v2_pokemonegggroups {
+                    group: pokemon_v2_egggroup {
+                      name
+                    }
+                  }
+                  pokemons: pokemon_v2_pokemons {
+                    id
+                    name
+                    height
+                    weight
+                    types: pokemon_v2_pokemontypes {
+                      type: pokemon_v2_type {
+                        name
+                      }
+                    }
+                    abilities: pokemon_v2_pokemonabilities {
+                      ability: pokemon_v2_ability {
+                        name
+                      }
+                    }
+                    stats: pokemon_v2_pokemonstats {
+                      base_stat
+                      stat: pokemon_v2_stat {
+                        name
+                      }
+                    }
+                  }
+                }
+                species_aggregate: pokemon_v2_pokemonspecies_aggregate {
+                  aggregate {
+                    count
+                  }
+                }
+              }
+            `,
+        })
+        .then((res) => {
+          setIsLoading(false);
+          setPokemon({ ...res.data.species[0] });
+        })
+        .catch(() => {
+          setError(true);
+          setIsLoading(false);
+        });
+    }
     fetchPokemonDetail();
   }, [id]);
-
-  function fetchPokemonDetail() {
-    client
-      .query({
-        query: gql`
-        query getPokemon {
-          species: pokemon_v2_pokemonspecies(
-            where: { name: { _eq: "${id}" } }
-            limit: 1
-          ) {
-            id
-            gender_rate
-            hatch_counter
-            name
-            description: pokemon_v2_pokemonspeciesflavortexts(
-              limit: 1
-              where: { pokemon_v2_language: { name: { _eq: "en" } } }
-            ) {
-              flavor_text
-            }
-            evolutions: pokemon_v2_evolutionchain {
-              species: pokemon_v2_pokemonspecies(order_by: { order: asc }) {
-                id
-                name
-                evolves_from_species_id
-                evolutions: pokemon_v2_pokemonevolutions {
-                  min_level
-                  min_affection
-                  min_beauty
-                  min_happiness
-                  gender_id
-                  time_of_day
-                  move: pokemon_v2_move {
-                    name
-                  }
-                  by_held_item: pokemonV2ItemByHeldItemId {
-                    name
-                  }
-                  item: pokemon_v2_item {
-                    name
-                  }
-                  evolution_trigger: pokemon_v2_evolutiontrigger {
-                    name
-                  }
-                  location: pokemon_v2_location {
-                    name
-                  }
-                }
-              }
-            }
-            egg_groups: pokemon_v2_pokemonegggroups {
-              group: pokemon_v2_egggroup {
-                name
-              }
-            }
-            pokemons: pokemon_v2_pokemons {
-              id
-              name
-              height
-              weight
-              types: pokemon_v2_pokemontypes {
-                type: pokemon_v2_type {
-                  name
-                }
-              }
-              abilities: pokemon_v2_pokemonabilities {
-                ability: pokemon_v2_ability {
-                  name
-                }
-              }
-              stats: pokemon_v2_pokemonstats {
-                base_stat
-                stat: pokemon_v2_stat {
-                  name
-                }
-              }
-            }
-          }
-          species_aggregate: pokemon_v2_pokemonspecies_aggregate {
-            aggregate {
-              count
-            }
-          }
-        }
-      `,
-      })
-      .then((res) => {
-        setIsLoading(false);
-        setPokemon({ ...res.data.species[0] });
-      })
-      .catch(() => {
-        setError(true);
-        setIsLoading(false);
-      });
-  }
 
   const renderImage = () => {
     return (
@@ -175,15 +174,21 @@ export default function PokemonDetail() {
 
   function renderAbout() {
     return (
-      <div class="px-4">
+      <div className="px-4">
         <p className="text">{pokemon.description[0].flavor_text}</p>
         <p className="has-text-grey-light mt-3">Height</p>
         <p>{heightConverter(pokemon.pokemons[0].height)}</p>
         <p className="has-text-grey-light mt-3">Weight</p>
         <p>{weightConverter(pokemon.pokemons[0].weight)}</p>
-        <p className="has-text-grey-light mt-3">Male</p>
+        <div className="is-flex align-items-center mt-3">
+          <p className="has-text-grey-light">Male</p>
+          <Icon path={mdiGenderMale} size={1} color="#485fc7" />
+        </div>
         <p>{maleRate(pokemon.gender_rate)}</p>
-        <p className="has-text-grey-light mt-3">Female</p>
+        <div className="is-flex align-items-center mt-3">
+          <p className="has-text-grey-light">Female</p>
+          <Icon path={mdiGenderFemale} size={1} color="#c53030" />
+        </div>
         <p>{femaleRate(pokemon.gender_rate)}</p>
         <p className="has-text-grey-light mt-3">Abilities</p>
         <p>{getAbilities().join(", ")}</p>
@@ -229,12 +234,7 @@ export default function PokemonDetail() {
         {getEvolutions().map((evo) => {
           return (
             <div className="mb-6" key={evo.name}>
-              <Link
-                to={"/detail/" + evo.name}
-                onClick={() => {
-                  fetchPokemonDetail();
-                }}
-              >
+              <Link to={"/detail/" + evo.name}>
                 <p className="capital bold is-size-5">
                   {evo.name}
 
@@ -303,8 +303,10 @@ export default function PokemonDetail() {
   function renderPokemonIDName() {
     return (
       <div className="mt-4">
-        <p>#{zeroPad(pokemon.id, 3)}</p>
-        <p className="has-text-weight-semibold capital mb-2">{pokemon.name}</p>
+        <p className="is-size-5">#{zeroPad(pokemon.id, 3)}</p>
+        <p className="is-size-5 has-text-weight-semibold capital mb-2">
+          {pokemon.name}
+        </p>
         {getTypes().map((type) => {
           return (
             <span
