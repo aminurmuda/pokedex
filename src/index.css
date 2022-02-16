@@ -1,13 +1,258 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: "Montserrat", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.rounded {
+  border-radius: 1rem;
+  margin-bottom: 4rem;
+}
+
+.between {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+p {
+  font-size: 16px !important;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+}
+
+p.bold {
+  font-weight: 600;
+}
+
+.card {
+  border-radius: 12px !important;
+  padding: 1.5rem !important;
+}
+
+.type-tag {
+  padding: 2px 10px 4px !important;
+  border-radius: 12px !important;
+  margin-right: 6px;
+}
+
+.container {
+  max-width: 540px !important;
+  height: 100%;
+}
+
+.capital {
+  text-transform: capitalize;
+}
+
+.wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.layer {
+  width: 100%;
+  position: relative;
+}
+
+.layer.front {
+  background-color: transparent;
+  z-index: 3;
+  top: 0px;
+}
+
+.layer.ground {
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 400px;
+  height: 200px;
+  background-color: rgb(189, 150, 77);
+  z-index: 1;
+  top: -170px;
+  border-radius: 50%;
+}
+
+.w-80 {
+  width: 80%;
+}
+
+.bg {
+  width: 100%;
+  height: 100vh;
+}
+
+.relative {
+  position: relative;
+  width: 100%;
+}
+.absolute {
+  top: 540px;
+  position: absolute;
+  width: 100%;
+  min-height: 100vh;
+}
+.fixed {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 100%;
+  width: calc(100% - 2rem);
+}
+.tabs ul {
+  border: none;
+}
+.tabs li a {
+  border: none;
+}
+.tabs li.is-active a {
+  border-bottom: 3px solid #485fc7;
+}
+
+@media only screen and (max-width: 540px) {
+  p {
+    font-size: 1rem;
+  }
+  .card {
+    padding: 1rem !important;
+  }
+  .absolute {
+    top: 430px;
+  }
+}
+
+.h100vh {
+  height: 100vh;
+}
+
+.is-grass {
+  background-color: #7ac74c !important;
+  color: #fff !important;
+}
+.is-fire {
+  background-color: #ee8130 !important;
+  color: #fff !important;
+}
+.is-water {
+  background-color: #6390f0 !important;
+  color: #fff !important;
+}
+.is-normal {
+  background-color: #a8a77a !important;
+  color: #fff !important;
+}
+.is-flying {
+  background-color: #a98ff3 !important;
+  color: #fff !important;
+}
+.is-bug {
+  background-color: #a6b91a !important;
+  color: #fff !important;
+}
+.is-poison {
+  background-color: #a33ea1 !important;
+  color: #fff !important;
+}
+.is-electric {
+  background-color: #f7d02c !important;
+  color: #fff !important;
+}
+.is-ground {
+  background-color: #e2bf65 !important;
+  color: #fff !important;
+}
+
+.is-ice {
+  background-color: #96d9d6 !important;
+  color: #fff !important;
+}
+.is-fighting {
+  background-color: #c22e28 !important;
+  color: #fff !important;
+}
+.is-psychic {
+  background-color: #f95587 !important;
+  color: #fff !important;
+}
+.is-rock {
+  background-color: #b6a136 !important;
+  color: #fff !important;
+}
+.is-ghost {
+  background-color: #735797 !important;
+  color: #fff !important;
+}
+.is-dragon {
+  background-color: #6f35fc !important;
+  color: #fff !important;
+}
+.is-dark {
+  background-color: #705746 !important;
+  color: #fff !important;
+}
+.is-steel {
+  background-color: #b7b7ce !important;
+  color: #fff !important;
+}
+.is-fairy {
+  background-color: #d685ad !important;
+  color: #fff !important;
+}
+
+.bg-grass {
+  background-color: #bde1a9 !important;
+}
+.bg-fire {
+  background-color: #f0cfb6 !important;
+}
+.bg-water {
+  background-color: #a2b5dd !important;
+}
+.bg-normal {
+  background-color: #bdbdaf !important;
+}
+.bg-flying {
+  background-color: #cfc0f7 !important;
+}
+.bg-bug {
+  background-color: #ccd67f !important;
+}
+.bg-poison {
+  background-color: #d8b9d8 !important;
+}
+.bg-electric {
+  background-color: #fdeeb2 !important;
+}
+.bg-ground {
+  background-color: #ebd8aa !important;
+}
+.bg-ice {
+  background-color: #bfdfdd !important;
+}
+.bg-fighting {
+  background-color: #e2acaa !important;
+}
+.bg-psychic {
+  background-color: #f8a0bb !important;
+}
+.bg-rock {
+  background-color: #bbaf74 !important;
+}
+.bg-ghost {
+  background-color: #b0a1c4 !important;
+}
+.bg-dragon {
+  background-color: #956ff7 !important;
+}
+.bg-dark {
+  background-color: #998b82 !important;
+}
+.bg-steel {
+  background-color: #d2d2dd !important;
+}
+.bg-fairy {
+  background-color: #eeb9d4 !important;
 }
