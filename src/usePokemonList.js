@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 
-export default function usePokemonList(pageNumber = 1) {
+export default function usePokemonList(pageNumber = 1, online) {
   const client = new ApolloClient({
     uri: "https://beta.pokeapi.co/graphql/v1beta",
     cache: new InMemoryCache(),
@@ -41,7 +41,7 @@ export default function usePokemonList(pageNumber = 1) {
     if (isDataAvailable) {
       const res = JSON.parse(isDataAvailable);
       setPokemonHelper(res);
-    } else if (!isDataAvailable) {
+    } else if (!isDataAvailable && online) {
       client
         .query({
           query: gql`
@@ -81,7 +81,7 @@ export default function usePokemonList(pageNumber = 1) {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageNumber]);
+  }, [pageNumber, online]);
 
   return { loading, error, pokemons, hasMore };
 }

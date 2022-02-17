@@ -33,8 +33,16 @@ export default function App() {
     <>
       <Router>
         <Routes>
-          <Route exact path="/" element={<PokemonList />}></Route>
-          <Route exact path="/detail/:id" element={<PokemonDetail />}></Route>
+          <Route
+            exact
+            path="/"
+            element={<PokemonList online={online} />}
+          ></Route>
+          <Route
+            exact
+            path="/detail/:id"
+            element={<PokemonDetail online={online} />}
+          ></Route>
         </Routes>
       </Router>
       <Floating isActive={!online} content={"Offline mode"} />

@@ -1,5 +1,5 @@
-import React from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useParams, useLocation } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import styled from "styled-components";
@@ -18,9 +18,14 @@ const Bar = styled.hr`
   margin: 0;
 `;
 
-export default function PokemonDetail() {
+export default function PokemonDetail({ online }) {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
   const { id } = useParams();
-  const { pokemon, loading, error } = usePokemonDetail(id);
+  const { pokemon, loading, error } = usePokemonDetail(id, online);
 
   const renderImage = () => {
     return (

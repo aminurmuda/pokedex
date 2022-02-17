@@ -23,7 +23,7 @@ self.addEventListener("fetch", (event) => {
         return response;
       }
       let requestUrl = event.request.clone();
-      fetch(requestUrl)
+      return fetch(requestUrl)
     })
   );
 });

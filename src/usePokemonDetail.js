@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 
-export default function usePokemonList(id) {
+export default function usePokemonList(id, online) {
   const client = new ApolloClient({
     uri: "https://beta.pokeapi.co/graphql/v1beta",
     cache: new InMemoryCache(),
@@ -24,7 +24,7 @@ export default function usePokemonList(id) {
     if (isDataAvailable) {
       const res = JSON.parse(isDataAvailable);
       setPokemonHelper(res);
-    } else if (!isDataAvailable) {
+    } else if (!isDataAvailable && online) {
       client
         .query({
           query: gql`
@@ -118,7 +118,7 @@ export default function usePokemonList(id) {
         //   setLoading(false);
         // });
     }
-  }, [id]);
+  }, [id, online]);
 
   return { loading, error, pokemon };
 }

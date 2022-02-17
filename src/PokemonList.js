@@ -4,10 +4,13 @@ import Loading from "./Loading";
 import usePokemonList from "./usePokemonList";
 import { Link } from "react-router-dom";
 
-export default function PokemonList() {
+export default function PokemonList({ online }) {
   const [pageNumber, setPageNumber] = useState(1);
 
-  const { pokemons, hasMore, loading, error } = usePokemonList(pageNumber);
+  const { pokemons, hasMore, loading, error } = usePokemonList(
+    pageNumber,
+    online
+  );
 
   const observer = useRef();
   const lastPokemonElementRef = useCallback(
