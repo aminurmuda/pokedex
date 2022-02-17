@@ -112,11 +112,11 @@ export default function usePokemonList(id, online) {
         .then((res) => {
           localStorage.setItem(key, JSON.stringify(res.data));
           setPokemonHelper(res.data);
-        })
-        // .catch(() => {
-        //   setError(true);
-        //   setLoading(false);
-        // });
+        });
+      // .catch(() => {
+      //   setError(true);
+      //   setLoading(false);
+      // });
     }
   }, [id, online]);
 
