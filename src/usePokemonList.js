@@ -11,16 +11,44 @@ export default function usePokemonList(pageNumber = 1) {
   const [pokemons, setPokemons] = useState([]);
   const [hasMore, setHasMore] = useState(false);
 
+  function setPokemonHelper(res) {
+    setPokemons((pokemons) => {
+      return [
+        ...new Set([
+          ...pokemons,
+          ...res.data.species.map((b) => {
+            return {
+              id: b.id,
+              name: b.name,
+              types: b.pokemons[0].types.map((type) => {
+                return type.type.name;
+              }),
+            };
+          }),
+        ]),
+      ];
+    });
+    setHasMore(res.data.species.length > 0);
+    setLoading(false);
+  }
+
   useEffect(() => {
     setLoading(true);
     setError(false);
-    client
-      .query({
-        query: gql`
+    const offset = (pageNumber - 1) * 20;
+    const key = `pokemons-offset-${offset}`;
+    const isDataAvailable = localStorage.getItem(key);
+    if (isDataAvailable) {
+      const res = JSON.parse(isDataAvailable);
+      setPokemonHelper(res);
+    } else if (!isDataAvailable) {
+      client
+        .query({
+          query: gql`
           query getPokemons {
             species: pokemon_v2_pokemonspecies(
               limit: 20
-              offset: ${(pageNumber - 1) * 20}
+              offset: ${offset}
               order_by: { id: asc }
             ) {
               id
@@ -41,31 +69,17 @@ export default function usePokemonList(pageNumber = 1) {
             }
           }
         `,
-      })
-      .then((res) => {
-        setPokemons((pokemons) => {
-          return [
-            ...new Set([
-              ...pokemons,
-              ...res.data.species.map((b) => {
-                return {
-                  id: b.id,
-                  name: b.name,
-                  types: b.pokemons[0].types.map((type) => {
-                    return type.type.name;
-                  }),
-                };
-              }),
-            ]),
-          ];
+        })
+        .then((res) => {
+          localStorage.setItem(key, JSON.stringify(res));
+          setPokemonHelper(res);
+        })
+        .catch(() => {
+          setError(true);
+          setLoading(false);
         });
-        setHasMore(res.data.species.length > 0);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError(true);
-        setLoading(false);
-      });
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber]);
 

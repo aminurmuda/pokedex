@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from "react";
 import Card from "./Card";
+import Loading from "./Loading";
 import usePokemonList from "./usePokemonList";
 import { Link } from "react-router-dom";
 
@@ -25,6 +26,8 @@ export default function PokemonList() {
 
   return (
     <div className="container mt-6 px-4">
+      <div>{loading && <Loading />}</div>
+      <div>{error && "Error"}</div>
       <div className="columns is-mobile is-multiline">
         {pokemons.map((pokemon, index) => {
           return (
@@ -48,8 +51,6 @@ export default function PokemonList() {
             </div>
           );
         })}
-        <div>{loading && "Loading..."}</div>
-        <div>{error && "Error"}</div>
       </div>
     </div>
   );

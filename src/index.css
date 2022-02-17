@@ -43,6 +43,17 @@ p.bold {
   height: 100%;
 }
 
+.floating {
+  position: fixed;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  background: white;
+  opacity: 0.6;
+}
+
 .capital {
   text-transform: capitalize;
 }

@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
-import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import styled from "styled-components";
 import Tabs from "./Tabs";
+import Loading from "./Loading";
 import { Link } from "react-router-dom";
 import Icon from "@mdi/react";
 import { mdiLink, mdiGenderMale, mdiGenderFemale } from "@mdi/js";
+import usePokemonDetail from "./usePokemonDetail";
 
 const Bar = styled.hr`
   /* Adapt the colors based on primary prop */
@@ -18,112 +19,8 @@ const Bar = styled.hr`
 `;
 
 export default function PokemonDetail() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [pokemon, setPokemon] = useState(null);
   const { id } = useParams();
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    function fetchPokemonDetail() {
-      const client = new ApolloClient({
-        uri: "https://beta.pokeapi.co/graphql/v1beta",
-        cache: new InMemoryCache(),
-      });
-      client
-        .query({
-          query: gql`
-              query getPokemon {
-                species: pokemon_v2_pokemonspecies(
-                  where: { name: { _eq: "${id}" } }
-                  limit: 1
-                ) {
-                  id
-                  gender_rate
-                  hatch_counter
-                  name
-                  description: pokemon_v2_pokemonspeciesflavortexts(
-                    limit: 1
-                    where: { pokemon_v2_language: { name: { _eq: "en" } } }
-                  ) {
-                    flavor_text
-                  }
-                  evolutions: pokemon_v2_evolutionchain {
-                    species: pokemon_v2_pokemonspecies(order_by: { order: asc }) {
-                      id
-                      name
-                      evolves_from_species_id
-                      evolutions: pokemon_v2_pokemonevolutions {
-                        min_level
-                        min_affection
-                        min_beauty
-                        min_happiness
-                        gender_id
-                        time_of_day
-                        move: pokemon_v2_move {
-                          name
-                        }
-                        by_held_item: pokemonV2ItemByHeldItemId {
-                          name
-                        }
-                        item: pokemon_v2_item {
-                          name
-                        }
-                        evolution_trigger: pokemon_v2_evolutiontrigger {
-                          name
-                        }
-                        location: pokemon_v2_location {
-                          name
-                        }
-                      }
-                    }
-                  }
-                  egg_groups: pokemon_v2_pokemonegggroups {
-                    group: pokemon_v2_egggroup {
-                      name
-                    }
-                  }
-                  pokemons: pokemon_v2_pokemons {
-                    id
-                    name
-                    height
-                    weight
-                    types: pokemon_v2_pokemontypes {
-                      type: pokemon_v2_type {
-                        name
-                      }
-                    }
-                    abilities: pokemon_v2_pokemonabilities {
-                      ability: pokemon_v2_ability {
-                        name
-                      }
-                    }
-                    stats: pokemon_v2_pokemonstats {
-                      base_stat
-                      stat: pokemon_v2_stat {
-                        name
-                      }
-                    }
-                  }
-                }
-                species_aggregate: pokemon_v2_pokemonspecies_aggregate {
-                  aggregate {
-                    count
-                  }
-                }
-              }
-            `,
-        })
-        .then((res) => {
-          setIsLoading(false);
-          setPokemon({ ...res.data.species[0] });
-        })
-        .catch(() => {
-          setError(true);
-          setIsLoading(false);
-        });
-    }
-    fetchPokemonDetail();
-  }, [id]);
+  const { pokemon, loading, error } = usePokemonDetail(id);
 
   const renderImage = () => {
     return (
@@ -325,10 +222,10 @@ export default function PokemonDetail() {
   }
   return (
     <div className={"container bg bg-" + getType()}>
-      {!pokemon || isLoading ? (
+      {!pokemon || loading ? (
         <div>
-          <p>{error ? "Error" : ""}</p>
-          <p>{isLoading ? "Loading..." : ""}</p>
+          <div>{loading && <Loading />}</div>
+          <div>{error && "Error"}</div>
         </div>
       ) : (
         <div className="relative">
